@@ -186,60 +186,17 @@ weighted avg 0.95 0.95 0.95 60
 ![安裝環境示意](導入資料集.png)
 2.上傳圖像：將 Yale Face Database 中的人臉圖像上傳到「Tr0」目錄中。
 3.掛載 Google Drive：在 Colab Notebook 中執行以下程式碼，掛載 Google Drive：
-```text
-from google.colab import drive drive.mount('/content/drive')
-```
+![安裝環境示意](步驟2.jpg)
 執行後，會出現一個授權提示，按照提示操作即可。
 
 ## 步驟 3：資料預處理
 
 在導入資料集後，需要對圖像進行預處理，包括轉換為灰階圖像、調整大小等。執行以下程式碼：
-```text
-import cv2 
-import os  
-def preprocess_image(image_path, target_size=(77, 68)): 
-img = cv2.imread(image_path) 
-gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) 
-resized = cv2.resize(gray, target_size) 
-return resized  
-def load_images_from_directory(directory): 
-images = [] 
-labels = [] 
-for filename in os.listdir(directory): 
-if filename.endswith(".jpg"): 
-image_path = os.path.join(directory, filename) 
-processed_image = preprocess_image(image_path) 
-label = filename.split(".")[0] 
-images.append(processed_image) 
-labels.append(label) 
-return images, labels
-```
+![安裝環境示意](步驟3.jpg)
 ## 步驟 4：模型建立與訓練
 
 現在，可以建立和訓練 ANN 模型。執行以下程式碼：
-```text
-import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.neural_network import MLPClassifier
-from sklearn.metrics import classification_report, confusion_matrix
-
-image_directory = "/content/drive/My Drive/Images/Tr0"
-images, labels = load_images_from_directory(image_directory)
-images = np.array(images)
-labels = np.array(labels)
-
-X_train, X_test, y_train, y_test = train_test_split(images, labels, test_size=0.2, random_state=42)
-
-n_neurons = 200
-model = MLPClassifier(hidden_layer_sizes=(n_neurons,), solver='adam', activation='logistic',
-                    batch_size=1, verbose=True, early_stopping=True, random_state=42)
-
-model.fit(X_train.reshape(X_train.shape[0], -1), y_train)
-
-y_pred = model.predict(X_test.reshape(X_test.shape[0], -1))
-print(classification_report(y_test, y_pred))
-print(confusion_matrix(y_test, y_pred))
-```
+![安裝環境示意](步驟4.jpg)
 ## 步驟 5：結果評估與優化
 
 訓練完成後，查看模型的評估結果，並根據需要調整參數或增加資料，以提升模型的效能。
